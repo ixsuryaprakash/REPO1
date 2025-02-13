@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'FOLDER_NAME', defaultValue: 'NewFolder', description: 'Enter the name of the folder to create')
+    }
+    environment {
+        DEST_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1'  
+    }
+    stages {
+        stage('Hello') {
+            steps {
+                git branch: 'main', credentialsId: 'ec86868c-2e70-430e-bd97-1382cb0fd1db', url: 'https://github.com/ixsuryaprakash/REPO1.git/'
+            }
+        }
+        stage('Create Folder') {
+            steps {
+                script {
+                    def folderPath = "${env.DEST_DIR}\\${params.FOLDER_NAME}"
+                    echo "Creating folder at: ${folderPath}"
+                    bat """
+                        if not exist "${folderPath}" mkdir "${folderPath}"
+                    """
+                }
+            }
+        }
+    }
+}
+
