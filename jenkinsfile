@@ -23,6 +23,18 @@ pipeline {
                 }
             }
         }
+stage('Copy Folders') {
+            steps {
+                script {
+                    def source1 = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.1'
+                    def source2 = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.2'
+                    def destination = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\$NewFolder'
+                    
+                    bat "xcopy /E /I /Y \"${source1}\" \"${destination}\\folder1.1\""
+                    bat "xcopy /E /I /Y \"${source2}\" \"${destination}\\folder1.2\""
+                }
+            }
+        }
     }
 }
 
