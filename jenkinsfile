@@ -7,8 +7,7 @@ pipeline {
 
     environment {
         DEST_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1'  
-        SOURCE_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.1'  
-        SOURCE_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.2'
+        SOURCE_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.1' 
      }
 
     stages {
