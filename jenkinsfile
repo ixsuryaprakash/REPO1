@@ -23,18 +23,59 @@ pipeline {
                 }
             }
         }
-stage('Copy Folders') {
+
+
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FOLDER_NAME', defaultValue: 'NewFolder', description: 'Enter the name of the folder to create')
+    }
+
+    environment {
+        DEST_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1'  
+        SOURCE_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.1'  // Folder containing existing folders to copy
+        SOURCE_DIR = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.2'
+}
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', credentialsId: 'ec86868c-2e70-430e-bd97-1382cb0fd1db', url: 'https://github.com/ixsuryaprakash/REPO1.git/'
+            }
+        }
+
+        stage('Create Folder') {
             steps {
                 script {
-                    def source1 = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.1'
-                    def source2 = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\folder1.2'
-                    def destination = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\job-17\\folder1\\${NewFolder}'
-                    
-                    bat "xcopy /E /I /Y \"${source1}\" \"${destination}\\folder1.1\""
-                    bat "xcopy /E /I /Y \"${source2}\" \"${destination}\\folder1.2\""
+                    def folderPath = "${env.DEST_DIR}\\${params.FOLDER_NAME}"
+                    echo "Creating folder at: ${folderPath}"
+                    bat """
+                        if not exist "${folderPath}" mkdir "${folderPath}"
+                    """
+                }
+            }
+        }
+
+        stage('Copy Existing Folders') {
+            steps {
+                script {
+                    def targetPath = "${env.DEST_DIR}\\${params.FOLDER_NAME}"
+                    echo "Copying existing folders from ${env.SOURCE_DIR} to ${targetPath}"
+
+                    bat """
+                        if exist "${env.SOURCE_DIR}" (
+                            xcopy /E /I /Y "${env.SOURCE_DIR}\\*" "${targetPath}\\"
+                            echo Folders copied successfully!
+                        ) else (
+                            echo Source directory does not exist: ${env.SOURCE_DIR}
+                        )
+                    """
                 }
             }
         }
     }
 }
+
 
